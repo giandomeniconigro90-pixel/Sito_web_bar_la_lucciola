@@ -1,0 +1,1 @@
+const modal=document.getElementById('photo');document.querySelectorAll('[data-photo]').forEach(b=>b.addEventListener('click',()=>{modal.querySelector('img').src=b.dataset.photo;modal.showModal()}));modal.querySelector('button').onclick=()=>modal.close();modal.addEventListener('click',e=>{if(e.target===modal)modal.close()});

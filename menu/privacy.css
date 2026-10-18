@@ -1,0 +1,11 @@
+@import url('vendor/fonts.css');
+:root {color-scheme:light; font-family:Inter,Arial,sans-serif; color:#302d29; background:#f5efe3;}
+* {box-sizing:border-box;}
+body {margin:0; padding:24px;}
+main {max-width:780px; margin:24px auto; padding:clamp(24px,5vw,48px); background:#fffdf8; border:1px solid #e5d9c6; border-radius:24px;}
+h1 {font-family:'Playfair Display',Georgia,serif; font-size:clamp(30px,5vw,42px); color:#80532f;}
+h2 {font-size:19px; margin-top:30px;}
+p,li {line-height:1.65;}
+a {color:#80532f; text-underline-offset:3px;}
+a:focus-visible {outline:3px solid #80532f; outline-offset:4px;}
+.date {color:#756d60; font-size:14px;}

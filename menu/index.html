@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="referrer" content="no-referrer" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"/>
+  
+  <title>Bar La Lucciola - Menù</title>
+
+  <link rel="icon" type="image/png" href="images/Logo_lucciola.png" />
+  <link rel="apple-touch-icon" href="images/Logo_lucciola.png" />
+  <meta name="theme-color" content="#2c2c2c" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <link rel="stylesheet" href="vendor/fonts.css" />
+  <link rel="preload" as="image" href="images/la-lucciola-neve.jpg" fetchpriority="high" />
+  <link rel="preload" as="image" href="images/Logo_lucciola.png" />
+  <link rel="stylesheet" href="style.css?v=20261018-green-2">
+  <script src="theme-init.js?v=20261011-1"></script>
+
+  <!-- Aggiungi nel <head>, prima degli stili -->
+  <link rel="preconnect" href="https://docs.google.com" />
+  <link rel="preconnect" href="https://sheets.googleapis.com" />
+</head>
+
+<body>
+<script src="lite-init.js?v=20261011-1"></script>
+
+
+<!-- LITE SWITCH (Destra) -->
+  <button id="lite-switch" data-action="lite" aria-label="Modalità Lite"></button>
+
+  <!-- WIFI BUTTON (Sinistra) -->
+  <button class="wifi-fab" data-action="wifi-open" aria-label="Wi-Fi">
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+      <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+      <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+      <line x1="12" y1="20" x2="12.01" y2="20"></line>
+    </svg>
+  </button>
+
+  <header>
+    <div class="xmas-garland" aria-hidden="true">
+      <svg
+        class="garland-svg"
+        viewBox="0 0 1000 120"
+        preserveAspectRatio="xMidYMin slice"
+        aria-hidden="true"
+      >
+        <path class="wire" d="M0,32 C260,92 740,92 1000,12"></path>
+        <path class="wire" d="M0,62 C260,122 740,122 1000,42"></path>
+        <path class="bulb bulb-1" d="M0,32 C260,92 740,92 1000,12"></path>
+        <path class="bulb bulb-2" d="M0,62 C260,122 740,122 1000,42"></path>
+      </svg>
+    </div>
+
+    <div class="snow-container" aria-hidden="true">
+      <div class="snow-layer layer-1"></div>
+      <div class="snow-layer layer-2"></div>
+      <div class="snow-layer layer-3"></div>
+    </div>
+
+    <div class="header-content">
+      <div class="header-brand">
+        <img id="bar-logo" src="images/Logo_lucciola.png" alt="Logo Bar La Lucciola" class="header-logo" width="64" height="64" />
+        <div>
+      <h1>Bar La Lucciola</h1>
+      <div class="subtitle">Laceno - Bagnoli Irpino</div>
+
+        </div>
+      </div>
+      <div class="info-cluster">
+        <div id="status-indicator" class="status-badge">
+          <span class="status-dot"></span> ...
+        </div>
+
+        <div id="weather-indicator" class="weather-badge" style="display:none"></div>
+        <div id="alert-banner" class="status-badge festive-badge" style="display:none"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="sticky-nav-container">
+    <div class="nav-cluster">
+      <div class="nav-pill-wrapper">
+        <button type="button" id="category-prev" class="category-arrow" data-action="category-prev" aria-label="Categoria precedente" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button>
+        <div class="nav-scroll-area">
+          <button class="tab-btn active tab-edge-left" data-cat="calde" data-action="category">
+            <span class="tab-btn-inner">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                <line x1="6" y1="1" x2="6" y2="4"></line>
+                <line x1="10" y1="1" x2="10" y2="4"></line>
+                <line x1="14" y1="1" x2="14" y2="4"></line>
+              </svg>
+              Calde
+            </span>
+          </button>
+
+          <button class="tab-btn" data-cat="fredde" data-action="category">
+            <span class="tab-btn-inner">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <line x1="12" y1="12" x2="22" y2="12"></line>
+                <line x1="12" y1="2" x2="12" y2="22"></line>
+                <path d="m20 16-4-4 4-4"></path>
+                <path d="m4 8 4 4-4 4"></path>
+                <path d="m16 4-4 4-4-4"></path>
+                <path d="m8 20 4-4 4 4"></path>
+              </svg>
+              Fredde
+            </span>
+          </button>
+
+          <button class="tab-btn" data-cat="aperitivi" data-action="category">
+            <span class="tab-btn-inner">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8 22h8M12 15v7M2 2h20l-10 13L2 2z"></path>
+              </svg>
+              Aperitivo
+            </span>
+          </button>
+
+          <button class="tab-btn" data-cat="alcolici" data-action="category">
+            <span class="tab-btn-inner">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8 22h8"></path>
+                <path d="M12 15v7"></path>
+                <path
+                  d="M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z"
+                ></path>
+              </svg>
+              Alcolici
+            </span>
+          </button>
+
+          <button class="tab-btn" data-cat="food" data-action="category">
+            <span class="tab-btn-inner">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1-2-2h4"
+                ></path>
+                <path d="M9 3v2a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V3"></path>
+                <circle cx="12" cy="12" r="1"></circle>
+              </svg>
+              Food
+            </span>
+          </button>
+
+          <button class="tab-btn tab-edge-right" data-cat="dolci" data-action="category">
+            <span class="tab-btn-inner">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m4.5 13.5 3-3"></path>
+                <path d="m19.5 13.5-3-3"></path>
+                <path
+                  d="M12 9c-4.5-2-8 1-9.5 4.5 2.5 4 6 5 9.5 5s7-1 9.5-5c-1.5-3.5-5-6.5-9.5-4.5Z"
+                ></path>
+              </svg>
+              Dolci
+            </span>
+          </button>
+        </div>
+        <button type="button" id="category-next" class="category-arrow" data-action="category-next" aria-label="Categoria successiva" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg></button>
+      </div>
+    </div>
+
+    <div class="header-search-row">
+
+      <!-- Ricerca -->
+      <div class="search-container in-header">
+        <div class="search-input-wrapper">
+          <svg
+            class="search-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            type="search"
+            autocomplete="off"
+            id="menu-search"
+            class="search-input"
+            placeholder="Cerca nel menù..."
+            data-action="search" aria-label="Cerca nel menù"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p id="menu-notice" role="status" hidden></p>
+  <div id="menu-container" class="menu-container"></div>
+
+  <div class="review-btn-container">
+    <button type="button" class="review-btn" data-action="review-open" aria-haspopup="dialog" aria-controls="review-dialog">
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        stroke="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+        ></path>
+      </svg>
+      Lascia una Recensione
+    </button>
+  </div>
+
+  <button id="back-to-top" data-action="top" aria-label="Torna su">
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m18 15-6-6-6 6"></path>
+    </svg>
+  </button>
+
+  <footer>
+    <div class="footer-info">
+      <div class="footer-title">Bar La Lucciola</div>
+
+      <a
+        href="https://www.google.com/maps/search/?api=1&query=Bar+La+Lucciola+Laceno+Bagnoli+Irpino"
+        target="_blank"
+        class="footer-address"
+        rel="noopener"
+      >
+        Via Dei Prati, 2 - Laceno
+      </a>
+
+      <a href="tel:082768069" class="footer-phone">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path
+            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+          ></path>
+        </svg>
+        Chiama · 0827 68069
+      </a>
+
+      <a class="footer-directions" href="https://www.google.com/maps/dir//Bar+la+Lucciola+di+Giuseppe+Di+Capua,+Via+dei+Prati,+2%2Fa,+83043+Bagnoli+Irpino+AV/@40.8029997,15.1138104,17z/data=!4m9!4m8!1m0!1m5!1m1!1s0x13397d74315985a1:0x5818b3349370d40f!2m2!1d15.1138307!2d40.8030722!3e0?entry=ttu&amp;g_ep=EgoyMDI2MTAwNy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener">Indicazioni</a>
+      <div class="footer-address footer-vat">P.IVA 611810647</div>
+    </div>
+
+    <div id="opening-hours-box"></div>
+
+    <div class="footer-social" role="group" aria-label="Trova Bar La Lucciola online">
+      <a href="https://restaurantguru.it/Bar-la-Lucciola-di-Giuseppe-Di-Capua-Laceno" target="_blank" rel="noopener noreferrer" class="social-circle" aria-label="Bar La Lucciola su Restaurant Guru" title="Restaurant Guru">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v5a3 3 0 0 0 6 0V3M8 3v18M19 3c-3 2-4 5-4 9h4M19 3v18"/></svg>
+      </a>
+      <a href="https://share.google/StmPMsEY8GsSkY0JX" target="_blank" rel="noopener noreferrer" class="social-circle" aria-label="Bar La Lucciola su Google" title="Google">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.6 12.23c0-.71-.06-1.39-.18-2.05H12v3.88h5.38a4.6 4.6 0 0 1-2 3.02v2.51h3.24c1.9-1.75 2.98-4.33 2.98-7.36Z M12 22c2.7 0 4.96-.9 6.62-2.41l-3.24-2.51c-.9.6-2.04.96-3.38.96-2.6 0-4.8-1.76-5.59-4.12H3.07v2.59A10 10 0 0 0 12 22Z M6.41 13.92a6 6 0 0 1 0-3.84V7.49H3.07a10 10 0 0 0 0 9.02l3.34-2.59Z M12 5.96c1.47 0 2.79.51 3.83 1.51l2.87-2.87A9.6 9.6 0 0 0 12 2a10 10 0 0 0-8.93 5.49l3.34 2.59C7.2 7.72 9.4 5.96 12 5.96Z" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a href="https://www.laceno.net/bar-la-lucciola.html" target="_blank" rel="noopener noreferrer" class="social-circle" aria-label="Bar La Lucciola su Laceno.net" title="Laceno.net">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m2 19 7-12 4 7 3-5 6 10H2Z"/><path d="m7 10 2 3 2-3"/><path d="m15 11 1 2 1-2"/></svg>
+      </a>
+      <a href="https://www.tripadvisor.it/Attraction_Review-g1985343-d3837986-Reviews-Bar_La_Lucciola-Bagnoli_Irpino_Province_of_Avellino_Campania.html" target="_blank" rel="noopener noreferrer" class="social-circle" aria-label="Bar La Lucciola su Tripadvisor" title="Tripadvisor">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8 1 5h6M21 8l2-3h-6M7 6c3-2 7-2 10 0M10 15l2 3 2-3"/><circle cx="6.5" cy="11" r="4.5"/><circle cx="17.5" cy="11" r="4.5"/><circle cx="6.5" cy="11" r="1.5"/><circle cx="17.5" cy="11" r="1.5"/></svg>
+      </a>
+      <a href="https://www.instagram.com/la_lucciola_bar/" target="_blank" rel="noopener noreferrer" class="social-circle" aria-label="Instagram Bar La Lucciola" title="Instagram">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".75" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a
+        href="https://www.facebook.com/barlalucciolaLACENO"
+        target="_blank"
+        class="social-circle"
+        aria-label="Facebook"
+        title="Facebook"
+        rel="noopener"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+          ></path>
+        </svg>
+      </a>
+    </div>
+
+    <div class="footer-bottom">
+      <a href="privacy.html">Privacy</a><br />
+      © 2026 Bar La Lucciola • Coperto e Servizio inclusi • Design by Giandomenico Nigro
+    </div>
+  </footer>
+
+
+  <dialog id="review-dialog" aria-labelledby="review-title">
+    <button type="button" class="review-close" data-action="review-close" aria-label="Chiudi scelta recensione">×</button>
+    <h2 id="review-title">La tua opinione conta</h2>
+    <p>Scegli dove lasciare la tua recensione.</p>
+    <a class="review-platform" href="https://share.google/StmPMsEY8GsSkY0JX" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.6 12.23c0-.71-.06-1.39-.18-2.05H12v3.88h5.38a4.6 4.6 0 0 1-2 3.02v2.51h3.24c1.9-1.75 2.98-4.33 2.98-7.36Z M12 22c2.7 0 4.96-.9 6.62-2.41l-3.24-2.51c-.9.6-2.04.96-3.38.96-2.6 0-4.8-1.76-5.59-4.12H3.07v2.59A10 10 0 0 0 12 22Z M6.41 13.92a6 6 0 0 1 0-3.84V7.49H3.07a10 10 0 0 0 0 9.02l3.34-2.59Z M12 5.96c1.47 0 2.79.51 3.83 1.51l2.87-2.87A9.6 9.6 0 0 0 12 2a10 10 0 0 0-8.93 5.49l3.34 2.59C7.2 7.72 9.4 5.96 12 5.96Z" fill="currentColor" stroke="none"/></svg><span>Google</span><span aria-hidden="true">↗</span></a>
+    <a class="review-platform" href="https://www.tripadvisor.it/Attraction_Review-g1985343-d3837986-Reviews-Bar_La_Lucciola-Bagnoli_Irpino_Province_of_Avellino_Campania.html" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8 1 5h6M21 8l2-3h-6M7 6c3-2 7-2 10 0M10 15l2 3 2-3"/><circle cx="6.5" cy="11" r="4.5"/><circle cx="17.5" cy="11" r="4.5"/><circle cx="6.5" cy="11" r="1.5"/><circle cx="17.5" cy="11" r="1.5"/></svg><span>Tripadvisor</span><span aria-hidden="true">↗</span></a>
+    <a class="review-platform" href="https://www.facebook.com/barlalucciolaLACENO/reviews" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="currentColor" stroke="none"/></svg><span>Facebook</span><span aria-hidden="true">↗</span></a>
+  </dialog>
+  <div id="wifi-modal" class="modal-overlay" data-action="wifi-close">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="wifi-title">
+      <button type="button" class="close-modal" data-action="wifi-close" aria-label="Chiudi Wi-Fi">&times;</button>
+
+      <svg
+        class="wifi-icon-large"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+        <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+        <line x1="12" y1="20" x2="12.01" y2="20"></line>
+      </svg>
+
+      <h3 id="wifi-title">Wi-Fi Gratuito</h3>
+      <p>Connettiti alla rete "La Lucciola"</p>
+      <div class="wifi-password-row">
+        <div id="wifi-password" class="wifi-pass">Chiedi la password al personale</div>
+        <button type="button" class="wifi-copy-btn" data-action="wifi-copy" hidden disabled style="display:none" aria-label="Copia la password Wi-Fi">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>
+          <span>Copia</span>
+        </button>
+      </div>
+      <p id="wifi-copy-status" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <script src="vendor/papaparse.min.js"></script>
+  <script src="script.js?v=20261018-sheet-1"></script>
+</body>
+</html>
+
