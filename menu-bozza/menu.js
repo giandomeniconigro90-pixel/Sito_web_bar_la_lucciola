@@ -12,6 +12,7 @@ const allergenMap = {
 };
 
 const Venue = window.LucciolaSite;
+const PREVIEW_VIEW_KEY = 'lucciola:preview:lite:' + (window.location?.pathname || '/menu-bozza/');
 const SHEET_URL = Venue.config.menuCsv;
 const HOURS_CSV_URL = Venue.config.hoursCsv;
 
@@ -538,8 +539,12 @@ function toggleLiteMode() {
   const isLite = body.classList.toggle('lite-mode');
 
   // Salva preferenza PER SEMPRE (così se torno domani si ricorda)
-storage.setItem('liteModeUser', isLite ? 'true' : 'false'); // scelta manuale
-storage.removeItem('liteMode'); // pulizia vecchia chiave (se presente)
+storage.setItem(PREVIEW_VIEW_KEY, isLite ? 'true' : 'false');
+if (window.history?.replaceState) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('vista', isLite ? 'essenziale' : 'normale');
+  window.history.replaceState(null, '', url.pathname + url.search + url.hash);
+}
 
   // Aggiorna icona
   updateLiteButton(btn, isLite);
@@ -801,8 +806,10 @@ window.syncSearchExpanded = syncSearchExpanded;
       else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
     }
   });
-  const userLite = storage.getItem('liteModeUser');
-  if (userLite !== null) document.body.classList.toggle('lite-mode', userLite === 'true');
+  const requestedView = new URLSearchParams(window.location?.search || '').get('vista');
+  const userLite = storage.getItem(PREVIEW_VIEW_KEY);
+  if (requestedView === 'normale' || requestedView === 'essenziale') document.body.classList.toggle('lite-mode', requestedView === 'essenziale');
+  else if (userLite !== null) document.body.classList.toggle('lite-mode', userLite === 'true');
   updateBrandLogo(new URLSearchParams(window.location?.search || '').get('tema') === 'natale' ? 'natale' : 'normale');
   // Orari + tabella + status (da CSV)
   initOpeningHours();

@@ -39,3 +39,14 @@ La proposta legge gli stessi dati reali e include ricerca, categorie con frecce 
 Verifiche: `node --test assets/site-core.test.cjs menu/tests/menu.test.cjs menu-bozza/tests/menu-preview.test.cjs`.
 
 ![Anteprima della proposta di menù](menu-bozza/anteprima.jpg)
+
+## Tre alternative di menù — 4 novembre 2026
+- Confronto: `menu-proposte/`, con collegamenti separati per vista normale ed essenziale.
+- `menu-carta/`: impaginazione tipografica e righe, senza schede.
+- `menu-bosco/`: testata verde e schede; lista compatta in essenziale.
+- `menu-banco/`: tutte le sei categorie visibili e lista numerata, senza frecce.
+- Le alternative condividono il motore in `menu-bozza/`, dati e risorse locali. La freccia segue l'ultima categoria quando la barra entra tutta; non cambia larghezza al cambio selezione.
+- La preferenza della vista è separata per proposta. `?vista=normale` e `?vista=essenziale` aprono esplicitamente la vista richiesta senza cambiare la preferenza del menù principale.
+- Il menù principale e i collegamenti della home restano invariati fino all'approvazione.
+
+![Confronto delle tre nuove proposte su telefono](menu-proposte/confronto.jpg)

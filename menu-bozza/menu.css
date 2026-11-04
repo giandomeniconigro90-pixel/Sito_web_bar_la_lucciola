@@ -33,3 +33,33 @@ body.lite-mode .intro-aside,body.lite-mode .intro-description{display:none}body.
 .item-info :is(h3,h4){font-size:16px}.allergen-tag{font-size:10px}
 @media(max-width:700px){.search-input{font-size:16px;height:44px}.search-icon{top:14px}.item-info :is(h3,h4){font-size:15px}}
 @media(max-width:380px){.item-info :is(h3,h4){font-size:14px}}
+
+/* Natural rail width: the next control follows the last category. */
+.nav-pill-wrapper{display:flex;gap:10px;justify-content:flex-start;min-width:0}
+.nav-scroll-area{flex:0 1 auto;width:max-content;max-width:calc(100% - 88px);min-width:0}
+.category-arrow{flex:0 0 34px;width:34px}
+.tab-btn,.tab-btn.active{font-weight:600}
+.intro-title-lite{display:none}
+body.lite-mode .intro-title-full{display:none}
+body.lite-mode .intro-title-lite{display:inline}
+body.lite-mode .menu-intro{display:block;padding-block:20px}
+body.lite-mode .menu-intro .eyebrow,body.lite-mode .intro-description,body.lite-mode .intro-aside{display:none}
+body.lite-mode .menu-intro h1{font-size:34px;line-height:1.2;letter-spacing:-1px;margin:0}
+body.lite-mode .info-cluster{margin-top:8px}
+body.lite-mode .menu-tools{padding-block:4px}
+body.lite-mode .tools-label{visibility:hidden}
+body.lite-mode #menu-main{margin-top:18px}
+body.lite-mode .menu-item{min-height:0;padding-block:15px}
+body.lite-mode .category-heading{padding-bottom:18px}
+@media(max-width:700px){.category-arrow{flex-basis:30px;width:30px}.nav-scroll-area{max-width:calc(100% - 80px)}body.lite-mode .menu-intro{padding-block:16px}body.lite-mode .menu-intro h1{font-size:29px}}
+
+/* Essential view: identity and controls share one compact, aligned row. */
+.intro-workspace{display:contents}
+body.lite-mode .intro-workspace{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:20px;max-width:var(--page);margin:0 auto}
+body.lite-mode .intro-workspace .menu-intro{margin:0;padding:22px 0;min-width:0;max-width:none;background:transparent;color:var(--ink);border:0}
+body.lite-mode .intro-workspace .menu-tools{margin:0;padding:0;border:0;max-width:none}
+body.lite-mode .tools-label{display:none}
+@media(max-width:1140px){body.lite-mode .intro-workspace{margin-inline:28px}}
+@media(max-width:700px){body.lite-mode .intro-workspace{margin-inline:20px;gap:10px}body.lite-mode .intro-workspace .menu-intro{padding-block:18px}body.lite-mode .intro-workspace .info-cluster{gap:8px;font-size:10px}body.lite-mode .intro-workspace .weather-badge{padding-left:8px}body.lite-mode .intro-workspace .tools-actions{gap:0}}
+@media(max-width:380px){body.lite-mode .intro-workspace{margin-inline:16px}.lite-mode .intro-workspace .wifi-fab,.lite-mode .intro-workspace #lite-switch{padding-inline:5px}}
+.category-heading>div{flex:1;min-width:0}.chapter{flex-shrink:0}

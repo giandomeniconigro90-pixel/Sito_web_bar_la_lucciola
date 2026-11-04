@@ -1,0 +1,4 @@
+@import url('../../menu-bozza/themes/natale.css');
+body:not(.lite-mode) .menu-intro h1 em{color:#f1dfb9}
+body:not(.lite-mode) .menu-intro .eyebrow{color:#e1cda4}
+body:not(.lite-mode) .festive-badge{background:#ffffff12;color:#f1dfb9}

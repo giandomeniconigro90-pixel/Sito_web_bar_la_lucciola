@@ -5,11 +5,11 @@ const vm=require('node:vm');
 const path=require('node:path');
 const core=require('../../assets/site-core.js');
 const source=fs.readFileSync(path.join(__dirname,'../menu.js'),'utf8');
-function setup(){
+function setup(pathname='/menu-bozza/'){
  const node=()=>({innerHTML:'',textContent:'',value:'',hidden:false,style:{},dataset:{},attributes:{},addEventListener(){},setAttribute(n,v){this.attributes[n]=v;},classList:{contains:()=>false,add(){},remove(){},toggle(){}},getAttribute(n){return this.attributes[n];}});
  const els={};let active='calde';
  const buttons=core.categories.map(cat=>({...node(),dataset:{cat},classList:{contains:()=>active===cat,add(){active=cat},remove(){}}}));
- const ctx={console,Date,Intl,URL,URLSearchParams,document:{body:node(),getElementById:id=>id==='seasonal-theme'?(els[id]||null):(els[id]??=node()),querySelector:s=>s==='.tab-btn.active'?buttons.find(b=>b.dataset.cat===active):null,querySelectorAll:s=>s.includes('tab-btn')?buttons:[],createElement:node,head:{appendChild(el){els[el.id]=el;el.remove=()=>delete els[el.id]}},addEventListener(){}},window:{LucciolaSite:core,location:{search:''},addEventListener(){},scrollTo(){}},localStorage:{getItem(){return null},setItem(){},removeItem(){}}};
+ const ctx={console,Date,Intl,URL,URLSearchParams,document:{body:node(),getElementById:id=>id==='seasonal-theme'?(els[id]||null):(els[id]??=node()),querySelector:s=>s==='.tab-btn.active'?buttons.find(b=>b.dataset.cat===active):null,querySelectorAll:s=>s.includes('tab-btn')?buttons:[],createElement:node,head:{appendChild(el){els[el.id]=el;el.remove=()=>delete els[el.id]}},addEventListener(){}},window:{LucciolaSite:core,location:{search:'',pathname,href:'https://example.test'+pathname},addEventListener(){},scrollTo(){}},localStorage:{getItem(){return null},setItem(){},removeItem(){}}};
  vm.createContext(ctx);vm.runInContext(source,ctx);return{ctx,els,buttons,run:s=>vm.runInContext(s,ctx)};
 }
 test('preview renders a complete menu chapter, prices and allergens safely',()=>{
@@ -32,4 +32,23 @@ test('search spans categories and clearing restores selection without stale prod
 });
 test('Christmas schedule updates presentation and resets outside its dates',()=>{
  const {run,ctx,els}=setup();run("transformCsvToMenu([{categoria:'IMPOSTAZIONE',nome:'tema',descrizione:'natale',data_inizio:'01/12/2026',data_fine:'31/12/2026'}]);applyScheduledContent('2026-12-15')");assert.equal(ctx.document.body.dataset.season,'natale');assert.equal(els['bar-logo'].src,'../assets/logo-natale-256.webp');assert.ok(els['seasonal-theme']);run("applyScheduledContent('2027-01-01')");assert.equal(ctx.document.body.dataset.season,'normale');assert.equal(els['seasonal-theme'],undefined);
+});
+
+test('explicit normal and essential previews override stored preference without leaking between designs',()=>{
+ const init=fs.readFileSync(path.join(__dirname,'../view-init.js'),'utf8');
+ for(const [search,saved,expected] of [['?vista=normale','true',false],['?vista=essenziale','false',true],['','true',true],['','false',false]]){
+  let actual;let key;
+  vm.runInNewContext(init,{URLSearchParams,location:{search,pathname:'/menu-banco/'},localStorage:{getItem(k){key=k;return saved}},document:{body:{classList:{toggle(_,state){actual=state}}}}});
+  assert.equal(actual,expected);assert.equal(key,'lucciola:preview:lite:/menu-banco/');
+ }
+ let fallback;
+ vm.runInNewContext(init,{URLSearchParams,location:{search:'?vista=essenziale',pathname:'/menu-carta/'},localStorage:{getItem(){throw Error('blocked')}},document:{body:{classList:{toggle(_,state){fallback=state}}}}});assert.equal(fallback,true);
+});
+test('view toggle preserves category and theme and only writes the current preview preference',()=>{
+ const {ctx,run,els}=setup('/menu-bosco/');let lite=false;const writes=[];let nextUrl='';
+ ctx.document.body.classList.toggle=()=>lite=!lite;
+ ctx.localStorage.setItem=(k,v)=>writes.push([k,v]);
+ ctx.window.location.href='https://example.test/menu-bosco/?categoria=dolci&tema=natale';
+ ctx.window.history={replaceState(_,__,u){nextUrl=u}};
+ run('toggleLiteMode()');assert.equal(els['lite-switch'].attributes['aria-pressed'],'true');assert.deepEqual(writes,[['lucciola:preview:lite:/menu-bosco/','true']]);assert.match(nextUrl,/categoria=dolci/);assert.match(nextUrl,/tema=natale/);assert.match(nextUrl,/vista=essenziale/);
 });
