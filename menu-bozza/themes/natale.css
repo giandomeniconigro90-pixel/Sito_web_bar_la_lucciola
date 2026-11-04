@@ -1,0 +1,12 @@
+/* La stessa impaginazione, un accento natalizio discreto. */
+:root{--gold:#956c3f;--line:#dcd9c8}
+.site-wordmark img{border-radius:0;width:50px;height:50px}
+.intro-photo{background-image:url('../../assets/inverno-640.webp')}
+.menu-intro .eyebrow{color:#8a493c}
+.menu-intro h1 em{color:#813f32}
+.category-heading{border-bottom-color:#cbbd9f}
+.category-heading .eyebrow{color:#91602e}
+.festive-badge{color:#813f32;background:#f0e6d6;border-radius:0 5px 5px 0}
+.review-btn{background:#813f32;border-color:#813f32}
+.review-btn:hover{background:#71372c}
+@media(max-width:700px){.site-wordmark img{width:42px;height:42px}}

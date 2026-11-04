@@ -29,3 +29,13 @@ Design by Giandomenico Nigro.
 - La home usa solo script e caratteri locali. I dati del foglio vengono trattati come contenuto non attendibile.
 - Test: `node --test assets/site-core.test.cjs menu/tests/menu.test.cjs`.
 - Pubblicazione ufficiale ancora da completare. Gli orari usano il CSV già configurato fino alla consegna del nuovo collegamento.
+
+
+## Proposta grafica del menù — da approvare
+La proposta completa è disponibile in `menu-bozza/`, separata dal menù attuale. La home continua a collegarsi a `menu/` fino alla conferma. Per provarla: `/menu-bozza/`; Natale: `/menu-bozza/?tema=natale`; categoria: `/menu-bozza/?categoria=dolci`.
+
+La proposta legge gli stessi dati reali e include ricerca, categorie con frecce e tastiera, prezzi e allergeni, stato apertura, meteo, Wi-Fi, recensioni e programmazione natalizia. Le finestre usano dialog nativi per focus, Escape e ritorno al comando iniziale. Nessun servizio di tracciamento aggiunto.
+
+Verifiche: `node --test assets/site-core.test.cjs menu/tests/menu.test.cjs menu-bozza/tests/menu-preview.test.cjs`.
+
+![Anteprima della proposta di menù](menu-bozza/anteprima.jpg)
