@@ -11,11 +11,9 @@ const allergenMap = {
   sedano: { icon: '🌿', label: 'Sedano' }
 };
 
-const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT3Ghg506BI5ZZQ8KS34J7rTZMPoK-avgZRYQo7SLy97ftZLUx3OxJq7UPUGYb-4g/pub?gid=1827225984&single=true&output=csv';
-
-// CSV ORARI (metti file locale "orari.csv" nella root del sito, oppure un Google Sheet pubblicato output=csv)
-const HOURS_CSV_URL =
-  'https://docs.google.com/spreadsheets/d/e/2PACX-1vThV67Jsk8wnHdlvqTjio2GuPGg0NIdRNzT5tgL5TLSwBzA85jNWec6dG2nRxJqF5-pinUjY_v99rqn/pub?output=csv';
+const Venue = window.LucciolaSite;
+const SHEET_URL = Venue.config.menuCsv;
+const HOURS_CSV_URL = Venue.config.hoursCsv;
 
 const CATEGORY_TITLES = {
   calde: 'Caffetteria',
@@ -47,15 +45,9 @@ let menuFetchInProgress = false;
 let previousMenuRows = null;
 
 // {0..6: [{start,end,startMin,endMin}, ...]}
-let openingSchedule = {
-  0: [{ start: '07:00', end: '24:00', startMin: 420, endMin: 1440 }],
-  1: [{ start: '07:00', end: '24:00', startMin: 420, endMin: 1440 }],
-  2: [{ start: '07:00', end: '24:00', startMin: 420, endMin: 1440 }],
-  3: [{ start: '07:00', end: '24:00', startMin: 420, endMin: 1440 }],
-  4: [{ start: '07:00', end: '24:00', startMin: 420, endMin: 1440 }],
-  5: [{ start: '07:00', end: '24:00', startMin: 420, endMin: 1440 }],
-  6: [{ start: '07:00', end: '24:00', startMin: 420, endMin: 1440 }]
-};
+let openingSchedule = null;
+let hoursSource = "loading";
+let hoursRequest = null;
 
 /* ===========================
    UTILS
@@ -107,83 +99,19 @@ function validateMenuResults(results) {
 /* ===========================
    ORARI: CSV -> TAB + STATUS
    =========================== */
-function dayToIndex(day) {
-  const m = {
-    dom: 0,
-    domenica: 0,
-    lun: 1,
-    lunedi: 1,
-    lunedì: 1,
-    mar: 2,
-    martedi: 2,
-    martedì: 2,
-    mer: 3,
-    mercoledi: 3,
-    mercoledì: 3,
-    gio: 4,
-    giovedi: 4,
-    giovedì: 4,
-    ven: 5,
-    venerdi: 5,
-    venerdì: 5,
-    sab: 6,
-    sabato: 6
-  };
-
-  const k = safeTrim(day).toLowerCase();
-  return m[k] ?? null;
-}
-
-function timeToMinutes(t) {
-  const text = safeTrim(t);
-  if (!/^\d{1,2}:\d{2}$/.test(text)) return null;
-  const [hh, mm] = text.split(':').map(Number);
-  if (hh === 24 && mm === 0) return 1440;
-  return hh >= 0 && hh < 24 && mm >= 0 && mm < 60 ? hh * 60 + mm : null;
-}
-function venueNow() {
-  const parts = new Intl.DateTimeFormat('en-GB', {timeZone:'Europe/Rome', year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', hourCycle:'h23'}).formatToParts(new Date());
-  const values = Object.fromEntries(parts.map(p => [p.type, p.value]));
-  return new Date(+values.year, +values.month - 1, +values.day, +values.hour, +values.minute);
-}
-function parseHoursCsv(rows) {
-  const schedule = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] };
-
-  rows.forEach((r) => {
-    const d = dayToIndex(r.day);
-    if (d === null) return;
-
-    const startMin = timeToMinutes(r.start);
-    const endMin = timeToMinutes(r.end);
-
-    // "CHIUSO" => giorno senza fasce
-    if (startMin === null || endMin === null) return;
-
-    schedule[d].push({
-      start: safeTrim(r.start),
-      end: safeTrim(r.end),
-      startMin,
-      endMin
-    });
-  });
-
-  // (opzionale) ordina le fasce per startMin
-  for (let d = 0; d <= 6; d++) {
-    schedule[d].sort((a, b) => (a.startMin ?? 0) - (b.startMin ?? 0));
-  }
-
-  return schedule;
-}
-
-function formatDaySlots(slots) {
-  if (!slots?.length) return 'Chiuso';
-  return slots.map((s) => `${s.start}–${s.end}`).join(' / ');
-}
-
+function dayToIndex(day) { return Venue.dayToIndex(day); }
+function timeToMinutes(time) { return Venue.timeToMinutes(time); }
+function venueNow() { return Venue.venueNow(); }
+function parseHoursCsv(rows) { return Venue.parseHoursCsv(rows); }
+function formatDaySlots(slots) { return Venue.formatDaySlots(slots); }
 function renderOpeningHoursTable() {
   const box = document.getElementById('opening-hours-box');
   if (!box) return;
 
+  if (!openingSchedule) {
+    box.innerHTML = '<div class="opening-hours-title">Orari</div><p class="hours-source">' + (hoursSource === 'loading' ? 'Verifico gli orari…' : 'Orari non disponibili. Chiama il bar per conferma.') + '</p>';
+    return;
+  }
   const names = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
   const today = venueNow().getDay();
 
@@ -200,59 +128,19 @@ function renderOpeningHoursTable() {
     `;
   }
 
-  html += `</table>`;
+  html += `</table>${hoursSource === 'cache' ? '<p class="hours-source">Ultimi orari salvati. Chiama per conferma.</p>' : ''}`;
   box.innerHTML = html;
 }
 
-function isOpenNow(dateObj) {
-  const day = dateObj.getDay(); // 0..6
-  const nowMin = dateObj.getHours() * 60 + dateObj.getMinutes();
-
-  const todaySlots = openingSchedule[day] || [];
-  const yday = (day + 6) % 7;
-  const ydaySlots = openingSchedule[yday] || [];
-
-  // Fasce di oggi (incluse quelle che passano mezzanotte)
-  for (const s of todaySlots) {
-    if (s.endMin > s.startMin) {
-      if (nowMin >= s.startMin && nowMin < s.endMin) return true;
-    } else if (s.endMin < s.startMin) {
-      // fascia che passa mezzanotte: aperto se ora >= start
-      if (nowMin >= s.startMin) return true;
-    }
-  }
-
-  // Fasce di ieri che passano mezzanotte e arrivano a oggi
-  for (const s of ydaySlots) {
-    if (s.endMin < s.startMin) {
-      if (nowMin < s.endMin) return true;
-    }
-  }
-
-  return false;
-}
-
+function isOpenNow(dateObj) { return Venue.isOpenNow(openingSchedule, dateObj); }
 function initOpeningHours() {
-  try {
-    const cached = JSON.parse(storage.getItem('openingHoursCache'));
-    if (cached && [0,1,2,3,4,5,6].every(d => Array.isArray(cached[d]) && cached[d].every(s => timeToMinutes(s.start) === s.startMin && timeToMinutes(s.end) === s.endMin))) openingSchedule = cached;
-  } catch (_) {}
-  renderOpeningHoursTable();
-  checkOpenStatus();
-  if (typeof Papa === 'undefined') return;
-  Papa.parse(HOURS_CSV_URL, {
-    download: true, header: true, skipEmptyLines: true, transform: safeTrim,
-    complete(results) {
-      const fields = results.meta?.fields || [];
-      const rows = results.data || [];
-      const valid = !results.errors?.length && ['day','start','end'].every(f => fields.includes(f)) && rows.length && rows.every(r => dayToIndex(r.day) !== null && ((safeTrim(r.start).toUpperCase() === 'CHIUSO' && (!safeTrim(r.end) || safeTrim(r.end).toUpperCase() === 'CHIUSO')) || (timeToMinutes(r.start) !== null && timeToMinutes(r.end) !== null && timeToMinutes(r.start) !== timeToMinutes(r.end))));
-      if (!valid) { console.warn('Orari CSV non validi: mantengo gli ultimi orari disponibili'); return; }
-      openingSchedule = parseHoursCsv(rows);
-      storage.setItem('openingHoursCache', JSON.stringify(openingSchedule));
-      renderOpeningHoursTable(); checkOpenStatus();
-    },
-    error(err) { console.warn('Orari non aggiornati:', err); }
-  });
+  if (hoursRequest) return hoursRequest;
+  renderOpeningHoursTable(); checkOpenStatus();
+  hoursRequest = Venue.loadHours(typeof Papa === 'undefined' ? null : Papa, storage).then(result => {
+    openingSchedule = result.schedule; hoursSource = result.source;
+    renderOpeningHoursTable(); checkOpenStatus();
+  }).finally(() => { hoursRequest = null; });
+  return hoursRequest;
 }
 function restoreMenuView() {
   const input = document.getElementById('menu-search');
@@ -301,7 +189,7 @@ function themeForRows(rows, today = venueDateKey()) {
 function updateBrandLogo(theme) {
   const logo = document.getElementById('bar-logo');
   if (!logo) return;
-  const src = theme === 'natale' ? 'images/Logo_lucciola_natale_ghirlanda.png' : 'images/Logo_lucciola.png';
+  const src = theme === 'natale' ? '../assets/logo-natale-256.webp' : '../assets/logo-192.webp';
   if (logo.getAttribute?.('src') !== src) logo.src = src;
   logo.alt = theme === 'natale' ? 'Logo natalizio Bar La Lucciola' : 'Logo Bar La Lucciola';
 }
@@ -343,6 +231,7 @@ function initDataFetch(useCache = true) {
   };
   if (typeof Papa === 'undefined') { failed(); return; }
   menuFetchInProgress = true;
+  if (!Object.keys(menuData).length) menuNotice('Caricamento del menù…');
   Papa.parse(SHEET_URL, {
     download: true, header: true, skipEmptyLines: true, transform: safeTrim,
     complete(results) {
@@ -569,6 +458,11 @@ function checkOpenStatus() {
   const el = document.getElementById('status-indicator');
   if (!el) return;
 
+  if (hoursSource !== 'live' || !openingSchedule) {
+    el.textContent = hoursSource === 'loading' ? 'Verifico gli orari' : 'Orari da verificare';
+    el.classList.remove('open', 'closed');
+    return;
+  }
   const isOpen = isOpenNow(venueNow());
 
   if (isOpen) {
@@ -711,6 +605,12 @@ function categoryHeading(title, category) {
 }
 
 function showCategory(catId, btnElement) {
+  if (!Venue.categories.includes(catId)) return;
+  if (btnElement && window.history?.replaceState) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('categoria', catId);
+    window.history.replaceState(null, '', url.pathname + url.search + url.hash);
+  }
   const isLite = document.body.classList.contains('lite-mode');
   const searchInput = document.getElementById('menu-search');
   if (searchInput) searchInput.value = '';
@@ -871,6 +771,8 @@ window.syncSearchExpanded = syncSearchExpanded;
   window.addEventListener('resize', updateCategoryArrows);
   if (categoryArea && typeof ResizeObserver !== 'undefined') new ResizeObserver(updateCategoryArrows).observe(categoryArea);
   updateCategoryArrows();
+  const requestedCategory = Venue.categoryFromSearch(window.location?.search || '');
+  if (requestedCategory) showCategory(requestedCategory, null);
   document.addEventListener('keydown', event => {
     const modal = document.getElementById('wifi-modal');
     if (!modal?.classList.contains('active')) return;
@@ -895,9 +797,9 @@ window.syncSearchExpanded = syncSearchExpanded;
   // Aggiorna badge aperto/chiuso ogni minuto (senza refresh)
   setInterval(() => { checkOpenStatus(); applyScheduledContent(); }, 60 * 1000);
   // Refresh only in visible tabs, preserving the selected category and search.
-  setInterval(() => { if (!document.hidden) initDataFetch(false); }, 2 * 60 * 1000);
+  setInterval(() => { if (!document.hidden) { initDataFetch(false); initOpeningHours(); } }, 2 * 60 * 1000);
   document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) { applyScheduledContent(); initDataFetch(false); }
+    if (!document.hidden) { applyScheduledContent(); initDataFetch(false); initOpeningHours(); }
   });
 
   // Bottone lite: allinea l'icona allo stato reale del body

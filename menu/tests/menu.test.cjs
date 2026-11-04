@@ -3,12 +3,13 @@ const assert = require('node:assert/strict');
 const vm = require('node:vm');
 const fs = require('node:fs');
 const path = require('node:path');
+const site = require('../../assets/site-core.js');
 const source = fs.readFileSync(path.join(__dirname, '../script.js'), 'utf8');
 function setup() {
   const node = () => ({innerHTML:'', textContent:'', value:'', style:{}, dataset:{}, hidden:true, addEventListener(){}, classList:{contains:()=>false, add(){}, remove(){}, toggle(){}}});
   const els = {}; const btn = node(); btn.dataset.cat = 'calde';
   const calls = [];
-  const ctx = { console, Intl, Date, URLSearchParams, document:{body:node(), getElementById:id=>id==='seasonal-theme' ? (els[id] || null) : (els[id]??=node()), createElement:()=>node(), head:{appendChild(el){ els[el.id]=el; el.remove=()=>delete els[el.id]; }}, querySelector:s=>s==='.tab-btn.active'?btn:node(), querySelectorAll:()=>[btn], addEventListener(){}}, window:{location:{search:''},addEventListener(){},scrollTo(){}}, localStorage:{getItem(){throw Error('blocked')},setItem(){throw Error('blocked')},removeItem(){throw Error('blocked')}}, Papa:{parse(url, options){calls.push(options)}} };
+  const ctx = { console, Intl, Date, URLSearchParams, document:{body:node(), getElementById:id=>id==='seasonal-theme' ? (els[id] || null) : (els[id]??=node()), createElement:()=>node(), head:{appendChild(el){ els[el.id]=el; el.remove=()=>delete els[el.id]; }}, querySelector:s=>s==='.tab-btn.active'?btn:node(), querySelectorAll:()=>[btn], addEventListener(){}}, window:{LucciolaSite:site,location:{search:''},addEventListener(){},scrollTo(){}}, localStorage:{getItem(){throw Error('blocked')},setItem(){throw Error('blocked')},removeItem(){throw Error('blocked')}}, Papa:{parse(url, options){calls.push(options)}} };
   vm.createContext(ctx); vm.runInContext(source,ctx);
   return {els, calls, ctx, run:s=>vm.runInContext(s,ctx)};
 }
@@ -96,13 +97,13 @@ test('Wi-Fi copy confirms success and explains denied clipboard access',async()=
 test('normal and Christmas logos follow schedule and URL override',()=>{
   const {run,els,ctx}=setup();
   run("transformCsvToMenu([{categoria:'IMPOSTAZIONE',nome:'tema',descrizione:'natale',disponibile:'TRUE',data_inizio:'01/12/2026',data_fine:'31/12/2026'}]);applyScheduledContent('2026-12-10')");
-  assert.equal(els['bar-logo'].src,'images/Logo_lucciola_natale_ghirlanda.png');
+  assert.equal(els['bar-logo'].src,'../assets/logo-natale-256.webp');
   run("applyScheduledContent('2027-01-01')");
-  assert.equal(els['bar-logo'].src,'images/Logo_lucciola.png');
+  assert.equal(els['bar-logo'].src,'../assets/logo-192.webp');
   ctx.window.location.search='?tema=natale';
   run("applyScheduledContent('2027-01-01')");
-  assert.equal(els['bar-logo'].src,'images/Logo_lucciola_natale_ghirlanda.png');
+  assert.equal(els['bar-logo'].src,'../assets/logo-natale-256.webp');
   ctx.window.location.search='?tema=normale';
   run("applyScheduledContent('2026-12-10')");
-  assert.equal(els['bar-logo'].src,'images/Logo_lucciola.png');
+  assert.equal(els['bar-logo'].src,'../assets/logo-192.webp');
 });

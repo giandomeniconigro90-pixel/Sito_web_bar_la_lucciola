@@ -9,16 +9,16 @@
   
   <title>Bar La Lucciola - Menù</title>
 
-  <link rel="icon" type="image/png" href="images/Logo_lucciola.png" />
-  <link rel="apple-touch-icon" href="images/Logo_lucciola.png" />
+  <link rel="icon" type="image/webp" href="../assets/logo-96.webp" />
+  <link rel="apple-touch-icon" href="../assets/logo-96.webp" />
   <meta name="theme-color" content="#2c2c2c" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-  <link rel="stylesheet" href="vendor/fonts.css" />
-  <link rel="preload" as="image" href="images/la-lucciola-neve.jpg" fetchpriority="high" />
-  <link rel="preload" as="image" href="images/Logo_lucciola.png" />
-  <link rel="stylesheet" href="style.css?v=20261018-green-2">
+  <link rel="stylesheet" href="vendor/fonts.css" /><link rel="stylesheet" href="../assets/site-theme.css?v=20261104" />
+  <link rel="preload" as="image" href="../assets/inverno-1120.webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="../assets/logo-192.webp" />
+  <link rel="stylesheet" href="style.css?v=20261104">
   <script src="theme-init.js?v=20261011-1"></script>
 
   <!-- Aggiungi nel <head>, prima degli stili -->
@@ -26,7 +26,7 @@
   <link rel="preconnect" href="https://sheets.googleapis.com" />
 </head>
 
-<body>
+<body><a class="skip-link" href="#menu-container">Vai al menù</a><div class="site-topbar"><a class="site-wordmark" href="../">La Lucciola</a><span class="menu-breadcrumb">Il menù</span><a class="home-return" href="../">← Torna al sito</a></div>
 <script src="lite-init.js?v=20261011-1"></script>
 
 
@@ -76,7 +76,7 @@
 
     <div class="header-content">
       <div class="header-brand">
-        <img id="bar-logo" src="images/Logo_lucciola.png" alt="Logo Bar La Lucciola" class="header-logo" width="64" height="64" />
+        <img id="bar-logo" src="../assets/logo-192.webp" alt="Logo Bar La Lucciola" class="header-logo" width="64" height="64" />
         <div>
       <h1>Bar La Lucciola</h1>
       <div class="subtitle">Laceno - Bagnoli Irpino</div>
@@ -365,7 +365,8 @@
   </div>
 
   <script src="vendor/papaparse.min.js"></script>
-  <script src="script.js?v=20261018-sheet-1"></script>
+  <script src="../assets/site-core.js?v=20261104"></script>
+  <script src="script.js?v=20261104"></script>
 </body>
 </html>
 
