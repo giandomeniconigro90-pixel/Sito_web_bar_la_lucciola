@@ -1,52 +1,30 @@
-# Sito web Bar La Lucciola
+# Bar La Lucciola — sito e menù
 
-Bozza indipendente del sito del bar al Laceno, con menù digitale verde bosco.
+La prima proposta di menù è stata scelta da Giandomenico e adottata in `menu/`. Home, menù e pagina privacy condividono crema, verde bosco, caratteri, larghezze, testata, footer e icone social. La pubblicazione ufficiale resta per una fase successiva.
 
-## Struttura
-- `index.html`: presentazione, galleria e contatti.
-- `menu/`: menù completo, avvisi, tema Natale, ricerca e recensioni.
-- `menu/images/`: immagini del locale e loghi.
-- `_headers`: intestazioni per hosting compatibili.
+## Pagine e risorse
+- `index.html`, `site.css`, `home.js`: presentazione del bar, galleria, contatti e orari.
+- `menu/index.html`, `menu/menu.css`, `menu/menu.js`, `menu/view-init.js`: menù scelto, vista normale/essenziale, ricerca, categorie, allergeni, disponibilità, Wi-Fi e scelta piattaforma recensioni.
+- `menu/themes/natale.css`: variante stagionale scelta, con logo e programmazione dal foglio.
+- `assets/site-theme.css`, `assets/site-shell.css`: identità e struttura comuni delle pagine attive.
+- `assets/site-core.js`: configurazione e logica degli orari, con validazione e gestione della copia salvata.
+- `menu/vendor/`: caratteri e libreria CSV ospitati localmente; `assets/`: immagini ottimizzate. Originali in `menu/images/`.
+- [BOZZE_MENU.md](BOZZE_MENU.md): tutte le alternative conservate, comprese Carta, Bosco e Banco.
 
-## Dati
-Il menù legge il nuovo foglio Google pubblicato, scheda Dati sito. Gli orari mantengono il precedente CSV fino alla comunicazione del nuovo collegamento. Le sorgenti sono configurate in `assets/site-core.js`.
+## Dati e sicurezza
+Le sorgenti Google Fogli sono in `assets/site-core.js`. Gli orari mantengono il CSV precedente fino alla consegna di un nuovo collegamento. Dati incompleti o non validi non vengono presentati come orari verificati. Le preferenze di visualizzazione sono separate per percorso.
 
-## Anteprima locale
-Dalla cartella principale: `python -m http.server 8000`, poi aprire http://localhost:8000.
+`_headers` contiene le intestazioni di sicurezza per hosting compatibili. Prima del lancio ufficiale verificare la loro applicazione sull'hosting scelto e completare dati del titolare, dettagli hosting e informativa privacy. Le pagine attive della bozza hanno `noindex,nofollow`, che non sostituisce il controllo degli accessi dell'anteprima privata.
 
-## Verifiche
-`node --test menu/tests/menu.test.cjs`
+## Prove
+Dalla radice della repository:
 
-Il caricamento su GitHub non attiva la pubblicazione ufficiale. Prima del lancio confermare testi, servizi e informativa privacy per l’hosting scelto.
+```sh
+LUCCIOLA_MENU_SCRIPT="$PWD/menu/menu.js" node --test assets/site-core.test.cjs menu/tests/menu.test.cjs menu-bozza/tests/menu-preview.test.cjs
+```
+
+24 test automatici superati sull'implementazione scelta e sulle funzioni condivise. Controlli visivi e funzionali su desktop, telefono (320 e 390 px) e tablet. Restano opportune prove su Safari/iPhone e dispositivi reali prima del lancio.
+
+I precedenti `menu/script.js` e `menu/style.css` sono conservati per consultazione e regressione; la pagina attiva carica `menu/menu.js` e `menu/menu.css`.
 
 Design by Giandomenico Nigro.
-
-## Aggiornamento 4 novembre 2026
-- Home e menù condividono colori, caratteri, pulsanti e navigazione di ritorno.
-- Collegamenti alle categorie: `menu/?categoria=calde`, `fredde`, `aperitivi`, `alcolici`, `food`, `dolci`.
-- Configurazione e logica orari condivise in `assets/site-core.js`. I dati incompleti o non validi non vengono presentati come orari verificati. In assenza di rete viene segnalata l'eventuale copia salvata.
-- Immagini WebP responsive in `assets/`; originali conservati in `menu/images/`.
-- La home usa solo script e caratteri locali. I dati del foglio vengono trattati come contenuto non attendibile.
-- Test: `node --test assets/site-core.test.cjs menu/tests/menu.test.cjs`.
-- Pubblicazione ufficiale ancora da completare. Gli orari usano il CSV già configurato fino alla consegna del nuovo collegamento.
-
-
-## Proposta grafica del menù — da approvare
-La proposta completa è disponibile in `menu-bozza/`, separata dal menù attuale. La home continua a collegarsi a `menu/` fino alla conferma. Per provarla: `/menu-bozza/`; Natale: `/menu-bozza/?tema=natale`; categoria: `/menu-bozza/?categoria=dolci`.
-
-La proposta legge gli stessi dati reali e include ricerca, categorie con frecce e tastiera, prezzi e allergeni, stato apertura, meteo, Wi-Fi, recensioni e programmazione natalizia. Le finestre usano dialog nativi per focus, Escape e ritorno al comando iniziale. Nessun servizio di tracciamento aggiunto.
-
-Verifiche: `node --test assets/site-core.test.cjs menu/tests/menu.test.cjs menu-bozza/tests/menu-preview.test.cjs`.
-
-![Anteprima della proposta di menù](menu-bozza/anteprima.jpg)
-
-## Tre alternative di menù — 4 novembre 2026
-- Confronto: `menu-proposte/`, con collegamenti separati per vista normale ed essenziale.
-- `menu-carta/`: impaginazione tipografica e righe, senza schede.
-- `menu-bosco/`: testata verde e schede; lista compatta in essenziale.
-- `menu-banco/`: tutte le sei categorie visibili e lista numerata, senza frecce.
-- Le alternative condividono il motore in `menu-bozza/`, dati e risorse locali. La freccia segue l'ultima categoria quando la barra entra tutta; non cambia larghezza al cambio selezione.
-- La preferenza della vista è separata per proposta. `?vista=normale` e `?vista=essenziale` aprono esplicitamente la vista richiesta senza cambiare la preferenza del menù principale.
-- Il menù principale e i collegamenti della home restano invariati fino all'approvazione.
-
-![Confronto delle tre nuove proposte su telefono](menu-proposte/confronto.jpg)

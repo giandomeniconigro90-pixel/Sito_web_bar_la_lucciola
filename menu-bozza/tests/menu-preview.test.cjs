@@ -4,7 +4,7 @@ const fs=require('node:fs');
 const vm=require('node:vm');
 const path=require('node:path');
 const core=require('../../assets/site-core.js');
-const source=fs.readFileSync(path.join(__dirname,'../menu.js'),'utf8');
+const source=fs.readFileSync(process.env.LUCCIOLA_MENU_SCRIPT || path.join(__dirname,'../menu.js'),'utf8');
 function setup(pathname='/menu-bozza/'){
  const node=()=>({innerHTML:'',textContent:'',value:'',hidden:false,style:{},dataset:{},attributes:{},addEventListener(){},setAttribute(n,v){this.attributes[n]=v;},classList:{contains:()=>false,add(){},remove(){},toggle(){}},getAttribute(n){return this.attributes[n];}});
  const els={};let active='calde';
