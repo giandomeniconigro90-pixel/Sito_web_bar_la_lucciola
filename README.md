@@ -8,7 +8,7 @@ La prima proposta di menù è stata scelta da Giandomenico e adottata in `menu/`
 - `menu/themes/natale.css`: variante stagionale scelta, con logo e programmazione dal foglio.
 - `assets/site-theme.css`, `assets/site-shell.css`: identità e struttura comuni delle pagine attive.
 - `assets/site-core.js`: configurazione e logica degli orari, con validazione e gestione della copia salvata.
-- `menu/vendor/`: caratteri e libreria CSV ospitati localmente; `assets/`: immagini ottimizzate. Originali in `menu/images/`.
+- `menu/vendor/`: caratteri e libreria CSV ospitati localmente; `assets/`: immagini ottimizzate (font in WOFF2). I file originali delle immagini non sono più nella repository: si recuperano dalla cronologia Git (commit a44d15c).
 - [BOZZE_MENU.md](BOZZE_MENU.md): tutte le alternative conservate, comprese Carta, Bosco e Banco.
 
 ## Dati e sicurezza
@@ -20,11 +20,11 @@ Le sorgenti Google Fogli sono in `assets/site-core.js`. Gli orari mantengono il 
 Dalla radice della repository:
 
 ```sh
-LUCCIOLA_MENU_SCRIPT="$PWD/menu/menu.js" node --test assets/site-core.test.cjs menu/tests/menu.test.cjs menu-bozza/tests/menu-preview.test.cjs
+node --test assets/site-core.test.cjs menu/tests/menu.test.cjs menu-bozza/tests/menu-preview.test.cjs
 ```
 
 24 test automatici superati sull'implementazione scelta e sulle funzioni condivise. Controlli visivi e funzionali su desktop, telefono (320 e 390 px) e tablet. Restano opportune prove su Safari/iPhone e dispositivi reali prima del lancio.
 
-I precedenti `menu/script.js` e `menu/style.css` sono conservati per consultazione e regressione; la pagina attiva carica `menu/menu.js` e `menu/menu.css`.
+La pagina attiva carica `menu/menu.js` e `menu/menu.css`; i vecchi `menu/script.js` e `menu/style.css` sono stati rimossi (recuperabili dalla cronologia Git).
 
 Design by Giandomenico Nigro.

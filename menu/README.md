@@ -14,7 +14,7 @@ Progetto unico per il menù normale e natalizio del Bar La Lucciola. La versione
 
 ## Temi
 
-Il tema normale è predefinito. Per riattivare neve, luci e bordi natalizi aprire `index.html?tema=natale` (oppure aggiungere `?tema=natale` all’URL del sito). Gli effetti sono conservati in `themes/natale.css`; le immagini originali restano disponibili.
+Il tema normale è predefinito. Per riattivare neve, luci e bordi natalizi aprire `index.html?tema=natale` (oppure aggiungere `?tema=natale` all’URL del sito). Gli effetti sono conservati in `themes/natale.css`; le immagini originali sono nella cronologia Git (commit a44d15c).
 
 ## CSV
 
@@ -26,7 +26,7 @@ Cache disponibile dopo una visita riuscita; non è una PWA offline. Se il CSV no
 
 ## Verifica
 
-`node --test tests/menu.test.cjs`
+`node --test assets/site-core.test.cjs menu/tests/menu.test.cjs menu-bozza/tests/menu-preview.test.cjs` dalla radice della repository
 
 Partita IVA e allergeni richiedono verifica dei dati originali prima della pubblicazione; non sono stati ricostruiti automaticamente.
 
