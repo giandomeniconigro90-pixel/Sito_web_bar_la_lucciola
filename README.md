@@ -1,10 +1,10 @@
 # Bar La Lucciola — sito e menù
 
-La prima proposta di menù è stata scelta da Giandomenico e adottata in `menu/`. Home, menù e pagina privacy condividono crema, verde bosco, caratteri, larghezze, testata, footer e icone social. La pubblicazione ufficiale resta per una fase successiva.
+La proposta **Carta** è il menù principale in `menu/` (stile in `menu/carta.css`, sopra `menu/menu.css`). Home, menù e pagina privacy condividono crema, verde bosco, caratteri, larghezze, testata, footer e icone social. La pubblicazione ufficiale resta per una fase successiva.
 
 ## Pagine e risorse
 - `index.html`, `site.css`, `home.js`: presentazione del bar, galleria, contatti e orari.
-- `menu/index.html`, `menu/menu.css`, `menu/menu.js`, `menu/view-init.js`: menù scelto, vista normale/essenziale, ricerca, categorie, allergeni, disponibilità, Wi-Fi e scelta piattaforma recensioni.
+- `menu/index.html`, `menu/menu.css`, `menu/carta.css`, `menu/menu.js`, `menu/view-init.js`: menù scelto, vista normale/essenziale, ricerca, categorie, allergeni, disponibilità, Wi-Fi e scelta piattaforma recensioni.
 - `menu/themes/natale.css`: variante stagionale scelta, con logo e programmazione dal foglio.
 - `assets/site-theme.css`, `assets/site-shell.css`: identità e struttura comuni delle pagine attive.
 - `assets/site-core.js`: configurazione e logica degli orari, con validazione e gestione della copia salvata.
