@@ -66,7 +66,7 @@ function isSoldOutLike(value) {
   return safeTrim(value).toLowerCase() === 'soldout';
 }
 
-function getActiveCategoryFromOnclick(btn) {
+function getButtonCategory(btn) {
   return btn?.dataset?.cat || null;
 }
 
@@ -147,7 +147,7 @@ function restoreMenuView() {
   const input = document.getElementById('menu-search');
   if (input?.value.trim()) { searchMenu(); return; }
   const active = document.querySelector('.tab-btn.active');
-  showCategory(getActiveCategoryFromOnclick(active) || 'calde', null);
+  showCategory(getButtonCategory(active) || 'calde', null);
 }
 // Date-only rules use the venue calendar (Europe/Rome), inclusive on both ends.
 function parseCalendarDate(value) {
@@ -398,7 +398,7 @@ function scrollCategories(direction) {
   const target = selected + Math.sign(direction);
   if (selected < 0 || target < 0 || target >= buttons.length || !direction) return;
   const button = buttons[target];
-  const category = getActiveCategoryFromOnclick(button);
+  const category = getButtonCategory(button);
   if (category) showCategory(category, button);
 }
 function clearMenuSearch() {
@@ -650,7 +650,7 @@ function showCategory(catId, btnElement) {
  // Se non mi passi il bottone, lo cerco in base alla categoria
  if (!targetBtn) {
    targetBtn = Array.from(document.querySelectorAll('.tab-btn'))
-     .find((b) => getActiveCategoryFromOnclick(b) === catId);
+     .find((b) => getButtonCategory(b) === catId);
  }
 
  if (targetBtn) {
@@ -668,12 +668,12 @@ function showCategory(catId, btnElement) {
     return;
   }
 
-  container.innerHTML = categoryHeading(data.title, catId);
+  const heading = categoryHeading(data.title, catId);
 
   const subcats = [...new Set(data.items.map((i) => i.subcategory))];
 
   if (subcats.length <= 1) {
-    renderItems(data.items, container, isLite);
+    container.innerHTML = heading + renderItemsHtml(data.items, isLite);
     return;
   }
 
@@ -686,18 +686,20 @@ function showCategory(catId, btnElement) {
     return a.localeCompare(b);
   });
 
+  let html = heading;
   subcats.forEach((sub) => {
     const isRedundant =
       sub.toLowerCase() === data.title.toLowerCase() ||
       (catId === 'fredde' && sub.toLowerCase() === 'bibite');
 
     if (!isRedundant) {
-      container.innerHTML += `<h3 class="subcategory-title">${escapeHtml(sub)}</h3>`;
+      html += `<h3 class="subcategory-title">${escapeHtml(sub)}</h3>`;
     }
 
     const groupItems = data.items.filter((i) => i.subcategory === sub);
-    renderItems(groupItems, container, isLite, true);
+    html += renderItemsHtml(groupItems, isLite, true);
   });
+  container.innerHTML = html;
 }
 
 function searchMenu() {
@@ -710,7 +712,7 @@ function searchMenu() {
 
   if (filter.length === 0) {
     const activeBtn = document.querySelector('.tab-btn.active');
-    const catId = getActiveCategoryFromOnclick(activeBtn);
+    const catId = getButtonCategory(activeBtn);
     if (activeBtn && catId) showCategory(catId, activeBtn);
     return;
   }
@@ -721,16 +723,16 @@ function searchMenu() {
     allMatches = allMatches.concat(matches);
   }
 
-  container.innerHTML = `<div class="category-heading"><div><p class="eyebrow">TROVA LA TUA PAUSA</p><h2>Risultati ricerca <span class="search-count">(${allMatches.length})</span></h2><p class="category-caption">Cerchiamo in tutte le categorie del menù.</p></div></div>`;
+  const searchHeading = `<div class="category-heading"><div><p class="eyebrow">TROVA LA TUA PAUSA</p><h2>Risultati ricerca <span class="search-count">(${allMatches.length})</span></h2><p class="category-caption">Cerchiamo in tutte le categorie del menù.</p></div></div>`;
   if (!allMatches.length) {
-    container.innerHTML += '<div class="search-empty"><p>Nessun prodotto trovato. Prova con un altro nome.</p><button type="button" data-action="clear-search">Cancella ricerca</button></div>';
+    container.innerHTML = searchHeading + '<div class="search-empty"><p>Nessun prodotto trovato. Prova con un altro nome.</p><button type="button" data-action="clear-search">Cancella ricerca</button></div>';
     return;
   }
-  renderItems(allMatches, container, document.body.classList.contains('lite-mode'));
+  container.innerHTML = searchHeading + renderItemsHtml(allMatches, document.body.classList.contains('lite-mode'));
 }
 
-function renderItems(items, container, isLite, grouped = false) {
-  items.forEach((item, index) => {
+function renderItemsHtml(items, isLite, grouped = false) {
+  return items.map((item, index) => {
     const price = Number.isFinite(item.price) && item.price >= 0 ? '€ ' + item.price.toFixed(2).replace('.', ',') : 'Prezzo da verificare';
     const descHTML = item.description ? `<p>${escapeHtml(item.description)}</p>` : '';
 
@@ -750,7 +752,7 @@ function renderItems(items, container, isLite, grouped = false) {
       allergensHTML += `</div>`;
     }
 
-    container.innerHTML += `
+    return `
       <article class="menu-item ${item.soldOut ? 'sold-out' : ''}" style="animation-delay: ${isLite ? 0 : Math.min(index, 4) * 0.025}s">
         <div class="item-info">
           <${grouped ? 'h4' : 'h3'}>${escapeHtml(item.name)} ${tagHTML}</${grouped ? 'h4' : 'h3'}>
@@ -761,7 +763,7 @@ function renderItems(items, container, isLite, grouped = false) {
         <div class="item-price">${price}</div>
       </article>
     `;
-  });
+  }).join('');
 }
 
 /* ===========================

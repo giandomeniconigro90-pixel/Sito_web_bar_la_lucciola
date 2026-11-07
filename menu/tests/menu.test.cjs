@@ -4,9 +4,9 @@ const vm = require('node:vm');
 const fs = require('node:fs');
 const path = require('node:path');
 const site = require('../../assets/site-core.js');
-const source = fs.readFileSync(path.join(__dirname, '../script.js'), 'utf8');
+const source = fs.readFileSync(path.join(__dirname, '../menu.js'), 'utf8');
 function setup() {
-  const node = () => ({innerHTML:'', textContent:'', value:'', style:{}, dataset:{}, hidden:true, addEventListener(){}, classList:{contains:()=>false, add(){}, remove(){}, toggle(){}}});
+  const node = () => ({innerHTML:'', textContent:'', value:'', style:{}, dataset:{}, hidden:true, setAttribute(){}, getAttribute(){return null}, removeAttribute(){}, addEventListener(){}, classList:{contains:()=>false, add(){}, remove(){}, toggle(){}}});
   const els = {}; const btn = node(); btn.dataset.cat = 'calde';
   const calls = [];
   const ctx = { console, Intl, Date, URLSearchParams, document:{body:node(), getElementById:id=>id==='seasonal-theme' ? (els[id] || null) : (els[id]??=node()), createElement:()=>node(), head:{appendChild(el){ els[el.id]=el; el.remove=()=>delete els[el.id]; }}, querySelector:s=>s==='.tab-btn.active'?btn:node(), querySelectorAll:()=>[btn], addEventListener(){}}, window:{LucciolaSite:site,location:{search:''},addEventListener(){},scrollTo(){}}, localStorage:{getItem(){throw Error('blocked')},setItem(){throw Error('blocked')},removeItem(){throw Error('blocked')}}, Papa:{parse(url, options){calls.push(options)}} };
